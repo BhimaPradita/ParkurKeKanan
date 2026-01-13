@@ -6,6 +6,10 @@ public class Collision : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject restartPanel;
     [SerializeField] private GameObject score;
+    [SerializeField] private AudioSource bgm;
+    [SerializeField] private AudioSource coinAudioSource;
+    [SerializeField] private AudioSource finishAudioSource;
+    [SerializeField] private AudioSource deathAudioSource;
     
     public CoinManager cm;
 
@@ -16,7 +20,9 @@ public class Collision : MonoBehaviour
             Debug.Log("Hit a Trap");
             RestartLevel();
             player.SetActive(false);
-            score.SetActive(false);
+            // score.SetActive(false);
+            bgm.Stop();
+            deathAudioSource.PlayOneShot(deathAudioSource.clip);
         }
     }
 
@@ -27,21 +33,33 @@ public class Collision : MonoBehaviour
             Debug.Log("Hit an Enemy");
             RestartLevel();
             player.SetActive(false);
-            score.SetActive(false);
+            // score.SetActive(false);
+            bgm.Stop();
+            deathAudioSource.PlayOneShot(deathAudioSource.clip);
+
         }
 
         if (obj.gameObject.CompareTag("Coin"))
         {
             Debug.Log("Collected a Coin");
             cm.coinCount++;
+            coinAudioSource.PlayOneShot(coinAudioSource.clip);
             Destroy(obj.gameObject);
         }
 
         if (obj.gameObject.CompareTag("Finish"))
         {
             Debug.Log("Stage1 Completed!");
-            SceneManager.LoadScene("Stage2");
+            player.SetActive(false);
+            bgm.Stop();
+            finishAudioSource.PlayOneShot(finishAudioSource.clip);
+            Invoke("LoadNextScene", 3f);
         }
+    }
+
+    void LoadNextScene()
+    {
+        SceneManager.LoadScene("Stage2");
     }
 
     void RestartLevel()

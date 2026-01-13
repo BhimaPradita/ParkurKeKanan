@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private float jumpInput;
     private bool jumpPressed;
     private bool isGrounded;
-    private bool isClimbing;
+    private bool isClimbing = false;
     private bool isFacingRight = true;
 
     void Awake()
@@ -68,10 +68,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Move()
-    {
-        Vector2 velocity = rb.linearVelocity;
-        velocity.x = moveInput.x * moveSpeed;
-        rb.linearVelocity = velocity;
+    {;
+        rb.linearVelocity = new Vector2(moveSpeed * moveInput.x, rb.linearVelocity.y);
     }
 
     private void Jump()
@@ -106,8 +104,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Climb()
     {
-        Vector2 velocity = rb.linearVelocity;
-        velocity.y = moveInput.y * climbSpeed;
-        rb.linearVelocity = velocity;
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, moveInput.y * climbSpeed);
     }
 }
